@@ -35,6 +35,7 @@ jobs:
       tag:
         type: string
     steps:
+      - setup_remote_docker
       - run:
           name: Tag Application Docker image
           command: |
@@ -46,6 +47,7 @@ jobs:
       tag:
         type: string
     steps:
+      - setup_remote_docker
       - run:
           name: Push application Docker image
           command: |
