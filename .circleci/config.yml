@@ -27,32 +27,15 @@ jobs:
           key: v1-{{ .Branch }}-{{ epoch }}
           paths:
             - /caches/cloudflare-wrangler-image.tar
-
-  tag-remote-image:
-    docker:
-      - image: docker:20.10.18-cli
-    parameters:
-      tag:
-        type: string
-    steps:
-      - setup_remote_docker
       - run:
           name: Tag Application Docker image
           command: |
-            docker tag "cloudflare-wrangler-image:<< parameters.tag >>" "partnerstack/cloudflare-wrangler-image:<< parameters.tag >>"
-  publish:
-    docker:
-      - image: docker:20.10.18-cli
-    parameters:
-      tag:
-        type: string
-    steps:
-      - setup_remote_docker
+            docker tag "cloudflare-wrangler-image:${CIRCLE_SHA1}" "partnerstack/cloudflare-wrangler-image:${CIRCLE_SHA1}"
       - run:
           name: Push application Docker image
           command: |
             echo "$DOCKERHUB_PASSWORD" | docker login -u "partnerstack" --password-stdin
-            docker push "partnerstack/cloudflare-wrangler-image:<< parameters.tag >>"
+            docker push "partnerstack/cloudflare-wrangler-image:${CIRCLE_SHA1}"
 
 workflows:
   new-main-commit: # After a PR has been merged to main
@@ -63,12 +46,3 @@ workflows:
               ignore: /^v.*/
             branches:
               only: main
-      - tag-remote-image:
-          requires:
-            - build
-          tag: ${CIRCLE_SHA1}
-      - publish:
-          context: [docker-hub]
-          requires:
-            - tag-remote-image
-          tag: ${CIRCLE_SHA1}
