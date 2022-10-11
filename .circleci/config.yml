@@ -53,6 +53,7 @@ workflows:
               only: main
       - publish:
           context: [docker-hub]
+          tag: ${CIRCLE_SHA1}
           requires:
             - build
           filters:
