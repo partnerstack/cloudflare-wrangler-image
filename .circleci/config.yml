@@ -36,6 +36,23 @@ jobs:
           command: |
             echo "$DOCKERHUB_PASSWORD" | docker login -u "partnerstack" --password-stdin
             docker push "partnerstack/cloudflare-wrangler-image:${CIRCLE_SHA1}"
+  tag-and-release:
+    docker:
+      - image: docker:20.10.18-cli
+    steps:
+      - setup_remote_docker
+      - run:
+          name: Pull Image
+          command: docker pull "partnerstack/cloudflare-wrangler-image:${CIRCLE_SHA1}"
+      - run:
+          name: Tag Image with Version
+          command: docker tag "partnerstack/cloudflare-wrangler-image:${CIRCLE_SHA1}" "partnerstack/cloudflare-wrangler-image:${CIRCLE_TAG}"
+      - run:
+          name: Push Image
+          command:
+            echo "$DOCKERHUB_PASSWORD" | docker login -u "partnerstack" --password-stdin
+            docker push "partnerstack/cloudflare-wrangler-image:${CIRCLE_TAG}"
+
 
 workflows:
   new-main-commit: # After a PR has been merged to main
@@ -47,3 +64,12 @@ workflows:
               ignore: /^v.*/
             branches:
               only: main
+  new-release-tag:
+    jobs:
+      - tag-and-release:
+          context: docker-hub
+          filters: # Only on Git tags staring with "v"
+              tags:
+                only: /^v.*/
+              branches:
+                ignore: /.*/
