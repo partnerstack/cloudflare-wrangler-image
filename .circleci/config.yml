@@ -49,7 +49,7 @@ jobs:
           command: docker tag "partnerstack/cloudflare-wrangler-image:${CIRCLE_SHA1}" "partnerstack/cloudflare-wrangler-image:${CIRCLE_TAG}"
       - run:
           name: Push Image
-          command:
+          command: |
             echo "$DOCKERHUB_PASSWORD" | docker login -u "partnerstack" --password-stdin
             docker push "partnerstack/cloudflare-wrangler-image:${CIRCLE_TAG}"
 
