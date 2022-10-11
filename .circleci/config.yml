@@ -50,7 +50,6 @@ jobs:
           name: Push application Docker image
           command: |
             echo "$DOCKERHUB_PASSWORD" | docker login -u "partnerstack" --password-stdin
-            docker tag cloudflare-wrangler-image:${CIRCLE_SHA1} "partnerstack/cloudflare-wrangler-image:<< parameters.tag >>"
             docker push "partnerstack/cloudflare-wrangler-image:<< parameters.tag >>"
 
 workflows:
@@ -62,12 +61,12 @@ workflows:
               ignore: /^v.*/
             branches:
               only: main
-      - publish:
-          context: [docker-hub]
+      - tag-remote-image:
           requires:
             - build
-          filters:
-            tags:
-              ignore: /^v.*/
-            branches:
-              only: main
+          tag: ${CIRCLE_SHA1}
+      - publish:
+          context: [docker-hub]
+          tag: ${CIRCLE_SHA1}
+          requires:
+            - tag-remote-image
