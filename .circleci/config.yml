@@ -67,6 +67,6 @@ workflows:
           tag: ${CIRCLE_SHA1}
       - publish:
           context: [docker-hub]
-          tag: ${CIRCLE_SHA1}
           requires:
             - tag-remote-image
+          tag: ${CIRCLE_SHA1}
