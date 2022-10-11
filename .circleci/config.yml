@@ -43,14 +43,14 @@ jobs:
             docker push "partnerstack/cloudflare-wrangler-image:<< parameters.tag >>"
 
 workflows:
-  new-master-commit: # After a PR has been merged to master
+  new-main-commit: # After a PR has been merged to main
     jobs:
       - build:
-          filters: # Only on new commits in master
+          filters: # Only on new commits in main
             tags:
               ignore: /^v.*/
             branches:
-              only: master
+              only: main
       - publish:
           context: [docker-hub]
           requires:
@@ -59,4 +59,4 @@ workflows:
             tags:
               ignore: /^v.*/
             branches:
-              only: master
+              only: main
