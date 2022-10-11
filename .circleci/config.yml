@@ -35,7 +35,7 @@ jobs:
       tag:
         type: string
     steps:
-      - tags:
+      - run:
           name: Tag Application Docker image
           command: |
             docker tag "cloudflare-wrangler-image:<< parameters.tag >>" "partnerstack/cloudflare-wrangler-image:<< parameters.tag >>"
@@ -46,7 +46,7 @@ jobs:
       tag:
         type: string
     steps:
-      - deploy:
+      - run:
           name: Push application Docker image
           command: |
             echo "$DOCKERHUB_PASSWORD" | docker login -u "partnerstack" --password-stdin
