@@ -28,6 +28,17 @@ jobs:
           paths:
             - /caches/cloudflare-wrangler-image.tar
 
+  tag-remote-image:
+    docker:
+      - image: docker:20.10.18-cli
+    parameters:
+      tag:
+        type: string
+    steps:
+      - run:
+          name: Tag Application Docker image
+          command: |
+            docker tag "cloudflare-wrangler-image:<< parameters.tag >>" "partnerstack/cloudflare-wrangler-image:<< parameters.tag >>"
   publish:
     docker:
       - image: docker:20.10.18-cli
@@ -35,7 +46,7 @@ jobs:
       tag:
         type: string
     steps:
-      - deploy:
+      - run:
           name: Push application Docker image
           command: |
             echo "$DOCKERHUB_PASSWORD" | docker login -u "partnerstack" --password-stdin
