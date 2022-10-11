@@ -6,8 +6,6 @@ jobs:
       docker_layer_caching: true
     steps:
       - checkout
-      - setup_remote_docker
-
       - run:
           name: Build application Docker image
           command: |
@@ -22,10 +20,10 @@ jobs:
             echo "$DOCKERHUB_PASSWORD" | docker login -u "partnerstack" --password-stdin
             docker push "partnerstack/cloudflare-wrangler-image:${CIRCLE_SHA1}"
   tag-and-release:
-    docker:
-      - image: docker:20.10.18-cli
+    machine:
+      image: ubuntu-2004:202104-01
+      docker_layer_caching: true
     steps:
-      - setup_remote_docker
       - run:
           name: Pull Image
           command: docker pull "partnerstack/cloudflare-wrangler-image:${CIRCLE_SHA1}"
