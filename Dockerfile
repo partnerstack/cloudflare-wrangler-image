@@ -4,6 +4,6 @@ FROM --platform=linux/amd64 node:lts-bullseye-slim
 # https://github.com/cloudflare/wrangler2/releases
 ARG WRANGLER_VERSION=2.1.10
 
-RUN npm install --global wrangler
+RUN npm install --global wrangler@${WRANGLER_VERSION}
 
 ENTRYPOINT ["/usr/local/bin/wrangler"]
