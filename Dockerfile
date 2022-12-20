@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y curl \
 
 # Cloudflare Wrangler CLI version
 # https://github.com/cloudflare/wrangler2/releases
-ARG WRANGLER_VERSION=2.1.10
+ARG WRANGLER_VERSION=2.6.2
 
 RUN npm install --global wrangler@${WRANGLER_VERSION}
 
