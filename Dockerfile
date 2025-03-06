@@ -1,6 +1,6 @@
-FROM --platform=linux/amd64 node:18-bullseye-slim
+FROM --platform=linux/amd64 node:23-bullseye-slim
 
-RUN apt-get update && apt-get install -y curl \
+RUN apt-get update && apt-get install -y curl git \
     && apt-get clean autoclean \
     && apt-get autoremove --yes \
     && rm -rf /var/lib/{apt,dpkg,cache,log}/
